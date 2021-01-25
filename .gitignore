@@ -123,3 +123,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# OS files
+.DS_Store
+.DS_Store?
