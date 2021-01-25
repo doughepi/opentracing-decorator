@@ -1,0 +1,21 @@
+-e .
+
+# Documentation
+mkdocs
+mkautodoc
+mkdocs-material
+
+# Packaging
+twine
+wheel
+
+# Testing & Linting
+autoflake
+black
+coverage
+flake8
+flake8-bugbear
+flake8-pie
+isort
+mypy
+pytest

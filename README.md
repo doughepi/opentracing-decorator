@@ -1,2 +1,2 @@
 # opentracing-decorator
- A Python decorator for OpenTracing trace generation.
+A Python decorator for OpenTracing trace generation.

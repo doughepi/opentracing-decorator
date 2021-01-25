@@ -1,0 +1,15 @@
+site_name: Opentracing Decorator
+site_description:  A Python decorator for OpenTracing trace generation.
+
+theme:
+    name: 'material'
+
+repo_name: doughepi/opentracing-decorator
+repo_url: https://github.com/doughepi/opentracing-decorator
+edit_uri: ""
+
+nav:
+    - Introduction: 'index.md'
+
+markdown_extensions:
+  - mkautodoc
