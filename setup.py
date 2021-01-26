@@ -32,6 +32,10 @@ setup(
     python_requires=">=3.7",
     version=get_version("opentracing_decorator"),
     url="https://github.com/doughepi/opentracing-decorator",
+    project_urls={
+        "Documentation": "https://doughepi.github.io/opentracing-decorator/",
+        "Source": "https://github.com/doughepi/opentracing-decorator",
+    },
     description="A Python decorator for OpenTracing trace generation.",
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
