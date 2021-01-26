@@ -9,8 +9,8 @@ else
 fi
 
 if [ ! -z "$GITHUB_ACTIONS" ]; then
-  git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  git config --local user.name "GitHub Action"
+  git config --local user.email "doughertypiper@gmail.com"
+  git config --local user.name "Piper Dougherty"
 
   VERSION=`grep __version__ ${VERSION_FILE} | grep -o '[0-9][^"]*'`
 

@@ -14,5 +14,5 @@ fi
 ${PREFIX}coverage run -m pytest
 
 if [ -z $GITHUB_ACTIONS ]; then
-    scripts/coverage
+    scripts/coverage.sh
 fi
