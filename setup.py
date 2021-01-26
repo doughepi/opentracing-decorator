@@ -5,12 +5,14 @@ from pathlib import Path
 
 from setuptools import setup, find_packages
 
+
 def get_version(package):
     """
     Return package version as listed in `__version__` in `init.py`.
     """
     version = Path(package, "__version__.py").read_text()
     return re.search("__version__ = ['\"]([^'\"]+)['\"]", version).group(1)
+
 
 def get_long_description():
     """
@@ -24,10 +26,11 @@ def get_long_description():
         long_description += f.read()
     return long_description
 
+
 setup(
     name="opentracing-decorator",
     python_requires=">=3.6",
-    version=get_version('opentracing_decorator'),
+    version=get_version("opentracing_decorator"),
     url="https://github.com/doughepi/opentracing-decorator",
     description="A Python decorator for OpenTracing trace generation.",
     long_description=get_long_description(),
