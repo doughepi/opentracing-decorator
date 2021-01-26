@@ -70,7 +70,7 @@ class Tracing:
     def trace(
         self,
         operation_name: str,
-        func: Callable,
+        func: Callable = None,
         *,
         pass_span: bool = False,
         tag_parameters: bool = False,
@@ -85,6 +85,7 @@ class Tracing:
         if func is None:
             func = functools.partial(
                 self.trace,
+                operation_name,
                 pass_span=pass_span,
                 tag_parameters=tag_parameters,
                 parameter_prefix=parameter_prefix,
