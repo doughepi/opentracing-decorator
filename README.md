@@ -9,11 +9,13 @@
 </a>
 </p>
 
+# Introduction
+
 Opentracing Decorator is a small Python library that adds a convenient
 decorator for generating OpenTracing traces. It works with any client
 implementation that follows the OpenTracing standard.
 
-**Note**: _Opentracing Decorator is in early beta. Use in production at your own risk. Although the library is small and quite stable, some bugs arising from edge cases should be expected._
+**Note**: _Opentracing Decorator is in early beta. Use in production at your own risk. Although the library is small and quite stable, some bugs arising from edge cases should be expected._ This library is not yet suitable for multithreaded, asyncio, or Web Server environments (Flask, Django, etc.).
 
 ---
 
@@ -76,7 +78,7 @@ Install with pip:
 $ pip install opentracing-decorator
 ```
 
-Opentracing Decorator requires Python 3.6+.
+Opentracing Decorator requires Python 3.7+.
 
 ## Documentation
 
