@@ -1,1 +1,1 @@
-__version__ = "1.0.0.dev3"
+from opentracing_decorator.tracing import Tracing
