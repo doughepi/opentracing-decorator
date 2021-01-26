@@ -20,14 +20,23 @@ implementation that follows the OpenTracing standard.
 Let's get started...
 
 ```python
+# examples/simple.py
+
 import time
 
 from jaeger_client import Config
 
 from opentracing_decorator import Tracing
 
+# No sampler host and port specified because the Jaeger client picks localhost:6831 by default.
 config = Config(
-    config={},
+    config={
+        "sampler": {
+            "type": "const",  # Not advised to have constant sampling in production.
+            "param": 1,
+        },
+        "logging": True,
+    },
     service_name="example-service",
     validate=True,
 )
@@ -38,22 +47,17 @@ jaeger_tracer = config.initialize_tracer()
 tracing = Tracing(tracer=jaeger_tracer)
 
 # Decorate functions with the @tracing.trace decorator and an operation_name.
-@tracing.trace(operation_name="AddNumbersTogether")
+@tracing.trace(operation_name="MyOperationName")
 def do_some_work(x, y, z):
-    time.sleep(1)
     return x + y + z
 
 
-@tracing.trace(operation_name="CountUp")
-def count_up_slowly(n):
-    for i in range(1, n):
-        print(f"At {i}.")
-        print(do_some_work(i, 10, 20))
-
-
 if __name__ == "__main__":
-    print("Counting up slowly.")
-    count_up_slowly(1000)
+    do_some_work(10, 20, 30)
+
+    # Give some time to report traces.
+    time.sleep(5)
+    jaeger_tracer.close()
 ```
 
 ## Features

@@ -1,5 +1,6 @@
 import time
 
+import requests
 from jaeger_client import Config
 
 from opentracing_decorator import Tracing
@@ -23,13 +24,13 @@ jaeger_tracer = config.initialize_tracer()
 tracing = Tracing(tracer=jaeger_tracer)
 
 # Decorate functions with the @tracing.trace decorator and an operation_name.
-@tracing.trace(operation_name="MyOperationName")
-def do_some_work(x, y, z):
-    return x + y + z
+@tracing.trace(operation_name="GetData", tag_parameters=True)
+def get_data(method, url, headers={}):
+    return requests.request(method, url, headers=headers)
 
 
 if __name__ == "__main__":
-    do_some_work(10, 20, 30)
+    get_data("GET", "https://jsonplaceholder.typicode.com/todos/1", {"Example-Header": "Value"})
 
     # Give some time to report traces.
     time.sleep(5)

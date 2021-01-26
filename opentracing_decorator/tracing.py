@@ -127,6 +127,6 @@ class Tracing:
                         return_reducer=return_reducer,
                     )
 
-            return value
+                return value
 
         return wrapper_trace
