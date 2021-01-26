@@ -144,7 +144,12 @@ class TestTracing(unittest.TestCase):
 
         logs = self.tracer.finished_spans()[0].logs
 
-        correct = {"return.test_1": 3, "return.test_2.0": 1, "return.test_2.1": 2, "return.test_2.2": 3}
+        correct = {
+            "return.test_1": 3,
+            "return.test_2.0": 1,
+            "return.test_2.1": 2,
+            "return.test_2.2": 3,
+        }
         self.assertDictEqual(correct, logs[0].key_values)
 
     def test_log_return_num_key(self):
@@ -155,7 +160,12 @@ class TestTracing(unittest.TestCase):
 
         logs = self.tracer.finished_spans()[0].logs
 
-        correct = {"return.3": 3, "return.test_2.0": 1, "return.test_2.1": 2, "return.test_2.2": 3}
+        correct = {
+            "return.3": 3,
+            "return.test_2.0": 1,
+            "return.test_2.1": 2,
+            "return.test_2.2": 3,
+        }
         self.assertDictEqual(correct, logs[0].key_values)
 
     def test_log_return_tuple_key(self):
@@ -166,7 +176,12 @@ class TestTracing(unittest.TestCase):
 
         logs = self.tracer.finished_spans()[0].logs
 
-        correct = {"return.(1, 1)": 3, "return.test_2.0": 1, "return.test_2.1": 2, "return.test_2.2": 3}
+        correct = {
+            "return.(1, 1)": 3,
+            "return.test_2.0": 1,
+            "return.test_2.1": 2,
+            "return.test_2.2": 3,
+        }
         self.assertDictEqual(correct, logs[0].key_values)
 
     def test_log_return_object_key(self):

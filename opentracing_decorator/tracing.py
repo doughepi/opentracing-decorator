@@ -1,7 +1,7 @@
 import functools
 import inspect
 import json
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, Optional
 
 import opentracing
 from flatten_dict import flatten
@@ -70,7 +70,7 @@ class Tracing:
     def trace(
         self,
         operation_name: str,
-        func: Callable,
+        func: Optional[Callable] = None,
         *,
         pass_span: bool = False,
         tag_parameters: bool = False,
@@ -85,6 +85,7 @@ class Tracing:
         if func is None:
             func = functools.partial(
                 self.trace,
+                operation_name,
                 pass_span=pass_span,
                 tag_parameters=tag_parameters,
                 parameter_prefix=parameter_prefix,
@@ -103,6 +104,8 @@ class Tracing:
 
                 if pass_span:
                     kwargs["span"] = span
+
+                assert func is not None
 
                 if tag_parameters:
                     self._tag_parameters(
@@ -126,6 +129,6 @@ class Tracing:
                         return_reducer=return_reducer,
                     )
 
-            return value
+                return value
 
         return wrapper_trace
