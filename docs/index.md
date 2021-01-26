@@ -4,7 +4,7 @@
 <a href="https://github.com/doughepi/opentracing-decorator/actions">
     <img src="https://github.com/doughepi/opentracing-decorator/workflows/Test%20Suite/badge.svg" alt="Test Suite">
 </a>
-<a href="https://pypi.org/project/httpx/">
+<a href="https://pypi.org/project/opentracing-decorator/">
     <img src="https://badge.fury.io/py/opentracing-decorator.svg" alt="Package Version">
 </a>
 </p>
