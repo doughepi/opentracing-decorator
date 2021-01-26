@@ -1,31 +1,66 @@
 import functools
+import inspect
+import numbers
+import json
+
+from typing import List
 
 import opentracing
+from opentracing import Span
 
-from opentracing_decorator.parameter_tagger import ParameterTagger
+from flatten_dict import flatten
 
 
 class Tracing:
-    def __init__(self, tracer: opentracing.Tracer = None):
-        self.tracer = tracer
+    def __init__(
+        self,
+        tracer: opentracing.Tracer = None,
+    ):
 
-    @property
-    def tracer(self) -> opentracing.Tracer:
-        """Get the underlying tracer.
+        if not tracer:
+            self.tracer = opentracing.tracer
+        else:
+            self.tracer = tracer
 
-        Returns:
-            opentracing.Tracer: The underlying opentracing.Tracer instance.
-        """
-        return self.tracer or opentracing.tracer
+    def _safe_convert(self, dikt):
+        return json.loads(json.dumps(dikt, default=str))
 
-    @tracer.setter
-    def tracer(self, value: opentracing.Tracer) -> None:
-        """Set the underlying tracer.
+    def _dict_to_tag(self, span: Span, dikt: dict) -> None:
+        for key, value in dikt.items():
+            span.set_tag(key, value)
 
-        Args:
-            value (opentracing.Tracer): The underlying opentracing.Tracer instance.
-        """
-        self._tracer = value
+    def _map_parameters(
+        self, func: callable, *args: List[any], **kwargs: dict[str, any]
+    ) -> dict[str, any]:
+        bound_arguments: inspect.BoundArguments = inspect.signature(func).bind(
+            *args, **kwargs
+        )
+        bound_arguments.apply_defaults()
+        parameters = {
+            key: value
+            for key, value in bound_arguments.arguments.items()
+            if key != "self"
+        }
+        parameters = self._safe_convert(parameters)
+        return parameters
+
+    def _flatten_dict(self, dikt: dict[str, any], reducer) -> dict[str, any]:
+        return flatten(dikt, reducer=reducer, enumerate_types=(list,))
+
+    def _tag_parameters(
+        self, span: Span, parameter_prefix, flatten_parameters, parameter_reducer, func: callable, *args: List[any], **kwargs: dict[str, any]
+    ) -> None:
+        mapped_parameters = self._map_parameters(func, *args, **kwargs)
+        if flatten_parameters:
+            mapped_parameters = self._flatten_dict(mapped_parameters, reducer=parameter_reducer)
+        self._dict_to_tag(span, flattened_parameters)
+
+    def _log_return(self, span: Span, return_prefix, flatten_return, return_reducer, value: any):
+        return_log = {return_prefix: value}
+        if flatten_return:
+            return_log = self._flatten_dict(return_log, reducer=return_reducer)
+        return_log = self._safe_convert(return_log)
+        span.log_kv(return_log)
 
     def trace(
         self,
@@ -35,8 +70,12 @@ class Tracing:
         pass_span: bool = False,
         tag_parameters: bool = False,
         parameter_prefix: str = None,
+        flatten_parameters: bool = True,
+        parameter_reducer: str = 'dot',
         log_return: bool = False,
-        reducer: str = "dot",
+        return_prefix: str = "return",
+        flatten_return: bool = True,
+        return_reducer: str = 'dot',
     ) -> None:
         """Decorate a function for tracing.
 
@@ -54,8 +93,12 @@ class Tracing:
                 pass_span=pass_span,
                 tag_parameters=tag_parameters,
                 parameter_prefix=parameter_prefix,
+                flatten_parameters=flatten_parameters,
+                parameter_reducer=parameter_reducer,
                 log_return=log_return,
-                reducer=reducer,
+                return_prefix=return_prefix,
+                flatten_return=flatten_return,
+                return_reducer=return_reducer,
             )
 
         @functools.wraps(func)
@@ -63,14 +106,16 @@ class Tracing:
             with self.tracer.start_active_span(operation_name) as scope:
                 span = scope.span
 
+                if pass_span:
+                    kwargs["span"] = span
+
                 if tag_parameters:
-                    parameter_tagger = ParameterTagger(parameter_prefix=parameter_prefix, reducer=reducer)
-                    parameter_tagger.tag_parameters(span, func, *args, **kwargs)
+                    self._tag_parameters(span, parameter_prefix, flatten_parameters, parameter_reducer, func, *args, **kwargs)
 
                 value = func(*args, **kwargs)
 
                 if log_return:
-                    span.log_kv({"return": value})
+                    self._log_return(span, return_prefix, flatten_return, return_reducer, value)
 
             return value
 
