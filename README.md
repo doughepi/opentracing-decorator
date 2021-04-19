@@ -1,3 +1,6 @@
+> :warning: **This project is archived**: OpenTracing is merging with OpenCensus, so [OpenTelemetry Python](https://github.com/open-telemetry/opentelemetry-python) is probably a more elegant solution for your use case.
+
+
 <p align="center"><strong>opentracing-decorator</strong> <em>- A Python decorator for OpenTracing trace generation.</em></p>
 
 <p align="center">
